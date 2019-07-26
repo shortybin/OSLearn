@@ -36,9 +36,7 @@ abstract class BaseVMActivity<VM : BaseViewModel> : BaseActivity(), LifecycleObs
     open fun onError(e: Throwable) {}
 
     override fun onDestroy() {
-        mViewModel.let {
-            lifecycle.removeObserver(it)
-        }
+        mViewModel.let(lifecycle::removeObserver)
         super.onDestroy()
     }
 }
