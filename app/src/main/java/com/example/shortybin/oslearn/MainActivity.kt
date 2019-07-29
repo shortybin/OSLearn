@@ -2,8 +2,8 @@ package com.example.shortybin.oslearn
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.example.shortybin.oslearn.http.HttpClient
-import kotlinx.coroutines.Dispatchers
+import com.example.shortybin.oslearn.http.BaseHttpClient
+import com.example.shortybin.oslearn.http.WAHttpClient
 import kotlinx.coroutines.launch
 import luyao.util.ktx.base.BaseActivity
 import luyao.util.ktx.base.BaseViewModel
@@ -18,15 +18,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initData() {
-        val httpClient = HttpClient.getHttpClient()
-
-
         BaseViewModel().viewModelScope.launch {
-            val banner = httpClient.getBanner()
-
+            val banner = WAHttpClient.apiService.getBanner()
             Log.d("123", banner.errorCode.toString())
-
         }
-
     }
 }
