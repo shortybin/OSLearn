@@ -1,5 +1,6 @@
 package com.example.shortybin.oslearn.ui.home
 
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shortybin.oslearn.R
@@ -28,13 +29,23 @@ class HomeFragment : BaseVMFragment<HomeViewMode>() {
     }
 
     override fun initData() {
-        mViewModel.launch {
-            val banner = WAHttpClient.apiService.getBanner()
-            mBannerImages = banner.data.flatMap {
+        initBanner()
+
+        mViewModel.getBanner()
+    }
+
+    override fun startObserve() {
+        super.startObserve()
+        mViewModel.mbannerList.observe(this@HomeFragment, Observer { it ->
+            mBannerImages = it.flatMap {
                 listOf(it.imagePath)
             }.toMutableList()
             mBanner.setImages(mBannerImages)
             mBanner.start()
-        }
+        })
+    }
+
+    fun initBanner() {
+
     }
 }
