@@ -4,7 +4,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shortybin.oslearn.R
-import com.example.shortybin.oslearn.http.WAHttpClient
+import com.example.shortybin.oslearn.adapter.HomeRecommendAdapter
 import com.example.shortybin.oslearn.utils.GlideImageLoader
 import kotlinx.android.synthetic.main.fragment_home.*
 import luyao.util.ktx.base.BaseVMFragment
@@ -18,6 +18,7 @@ class HomeFragment : BaseVMFragment<HomeViewMode>() {
     override fun providerVMClass() = HomeViewMode::class.java
 
     var mBannerImages = mutableListOf<String>()
+    val mHomeRecommendAdapter by lazy { HomeRecommendAdapter() }
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_home
@@ -25,13 +26,13 @@ class HomeFragment : BaseVMFragment<HomeViewMode>() {
 
     override fun initView() {
         mBanner.setImageLoader(GlideImageLoader())
-        mHomeRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+        mHomeRecyclerView.layoutManager = LinearLayoutManager(context)
+        mHomeRecyclerView.adapter = mHomeRecommendAdapter
     }
 
     override fun initData() {
-        initBanner()
-
         mViewModel.getBanner()
+        mViewModel.getHomeRecommend(0)
     }
 
     override fun startObserve() {
@@ -43,9 +44,9 @@ class HomeFragment : BaseVMFragment<HomeViewMode>() {
             mBanner.setImages(mBannerImages)
             mBanner.start()
         })
-    }
 
-    fun initBanner() {
-
+        mViewModel.mrecommendList.observe(this@HomeFragment, Observer {
+            mHomeRecommendAdapter.addData(it.datas)
+        })
     }
 }
